@@ -18,7 +18,7 @@
 					<a href="/profile">Profile</a>
 					<a href="/measurements">Measurements</a>
 					<a href="/products">Products</a>
-					<a href="/auth/logout">LOGOUT</a>
+					<a href="/logout">LOGOUT</a>
 		</ul>		
 	@else
 		<ul class="nav">

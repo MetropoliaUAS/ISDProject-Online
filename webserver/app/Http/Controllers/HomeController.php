@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use Illuminate\Http\Request;
+use App\Location;
+use App\Product;
+use Illuminate\Foundation\Auth\User;
+use phpDocumentor\Reflection\DocBlock\Type\Collection;
 
 class HomeController extends Controller
 {
@@ -41,14 +44,5 @@ class HomeController extends Controller
     {
         return view('pages.measurements');
     }
-	
-	public function products()
-    {
-		$products =[
-			'341234','1234513','634234'
-		];
-        return view('pages.products', compact('products'));
-    }
-	
-	
+
 }

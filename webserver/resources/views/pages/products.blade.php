@@ -11,8 +11,8 @@
 @if(count($products))
 	<h3>Registered Products:</h3>
 	<ul>
-	@foreach ($products as $device)
-		<li>{{$device}}</li>
+	@foreach ($products as $product)
+		<li>{{$product->id}} Version {{$product->version}}</li>
 	@endforeach
 	</ul>
 @endif
