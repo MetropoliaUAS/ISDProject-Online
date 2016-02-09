@@ -15,4 +15,12 @@ class VerifyCsrfToken extends BaseVerifier
         'products/create',
         'samplings/create'
     ];
+
+    protected function shouldPassThrough($request)
+    {
+        if ($request->is('login') && $request->ajax()) return true;
+        return parent::shouldPassThrough($request);
+    }
+
+
 }

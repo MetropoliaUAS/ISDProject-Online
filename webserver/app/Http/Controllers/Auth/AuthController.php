@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use Validator;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -21,7 +22,9 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesAndRegistersUsers, ThrottlesLogins {
+        AuthenticatesAndRegistersUsers::sendFailedLoginResponse as traitSendFailedLoginResponse;
+    }
 	
 	
     /**
@@ -65,4 +68,17 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        if ($request->ajax()) abort(401, "Bad credentials");
+        return $this->traitSendFailedLoginResponse($request);
+    }
+
+    protected function handleUserWasAuthenticated(Request $request, $throttles)
+    {
+        if ($request->ajax()) return ""; // return a 200 HTTP code Code
+        return redirect()->intended($this->redirectPath()); // copy paste from trait
+    }
+
 }
