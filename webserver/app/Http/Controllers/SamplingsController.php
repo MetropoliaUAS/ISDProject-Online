@@ -124,6 +124,7 @@ class SamplingsController extends Controller
         $samplingsQueryBuilder = Sampling::query();
 
         $samplingsQueryBuilder->join('sensors', 'samplings.sensor_id', '=', 'sensors.id');
+        $samplingsQueryBuilder->join('generic_sensors', 'sensors.generic_sensor_id', '=', 'generic_sensors.id');
         $samplingsQueryBuilder->join('products', 'sensors.product_id', '=', 'products.id');
         $samplingsQueryBuilder->where('products.id', $productId);
 
@@ -139,7 +140,6 @@ class SamplingsController extends Controller
 
         if ($request->generic_sensor_id)
         {
-            $samplingsQueryBuilder->join('generic_sensors', 'sensors.generic_sensor_id', '=', 'generic_sensors.id');
             $samplingsQueryBuilder->where('generic_sensors.id', $request->generic_sensor_id);
         }
 
@@ -150,6 +150,7 @@ class SamplingsController extends Controller
             array(
                 'samplings.id',
                 'samplings.sensor_id',
+                'generic_sensors.id as generic_sensor_id',
                 'samplings.sampled',
                 'samplings.created_at'
             )
