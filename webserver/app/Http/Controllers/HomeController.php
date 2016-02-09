@@ -40,9 +40,5 @@ class HomeController extends Controller
 		]);
     }
 	
-	public function measurements()
-    {
-        return view('pages.measurements');
-    }
 
 }

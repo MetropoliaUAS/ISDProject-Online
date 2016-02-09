@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\Sensor;
 use App\Location;
+use Illuminate\Support\Facades\Session;
 use Request;
 use Auth;
 use App\Http\Requests\ProductCreationRequest;
@@ -36,10 +37,10 @@ class ProductsController extends Controller
      */
     public function index()
     {
-
-        $Locations = Location::all();
-        $OwnLocations = $Locations->filter(function($item) {
-            return $item->user_id == Auth::User()->id;
+        $user_id = Auth::User()->id;
+        $Locations = collect(Location::all());
+        $OwnLocations = $Locations->filter(function($item) use($user_id) {
+            return $item->user_id == $user_id;
         });
 
         return view('products.index', compact('OwnLocations'));
@@ -55,10 +56,8 @@ class ProductsController extends Controller
 
         //Get Location to Product ID
         $location = $this->getLocation($id);
-        if($location)
-            return view('products.show',compact('product'),compact('location'));
-        else
-            return 'kein Treffer gefunden für: '. $id . ' ';
+        return view('products.show',compact('product'),compact('location'));
+
     }
 
     private function getLocation($productId)
@@ -83,14 +82,18 @@ class ProductsController extends Controller
         $location = $this->getLocation($productId);
         if ($location)
         {
-            if ($location->user_id == $userid)
-                return 'This Product is already added to your account';
+            if ($location->user_id == $userid) {
+                \Session::flash('flash_message','This Product is already added to your account');
+                return redirect('products');
+            }
         }
 
         //Check if Product already selfregistered/exist
         $products=Product::find($productId);
-        if(!$products)
-            return 'There was never a Product that connected to this Webserver with this ID: '. $productId;
+        if(!$products) {
+            \Session::flash('flash_message','There was never a Product that connected to this Webserver with this ID: ' . $productId);
+            return redirect('products');
+        }
         return view('products.add',compact('products'));
     }
 

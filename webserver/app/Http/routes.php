@@ -27,11 +27,14 @@ Route::get('/about', 'WelcomeController@about');
 //Webpages for users
 Route::get('/home', 'HomeController@home');
 Route::get('/profile', 'HomeController@profile');
-Route::get('/measurements', 'HomeController@measurements');
 
 Route::get('/products', 'ProductsController@index');
 Route::post('/products', 'ProductsController@check');
 Route::post('/products/add', 'ProductsController@add');
+Route::post('/products/delete/{id}', 'ProductsController@delete');
 Route::get('/products/{id}', 'ProductsController@show');
 Route::post('/products/{id}', 'ProductsController@update');
-Route::post('/products/delete/{id}', 'ProductsController@delete');
+
+Route::get('/sensors', 'SensorsController@index');
+Route::get('/sensors/types', 'SensorsController@show_types');
+Route::get('/sensors/{id}', 'SensorsController@show');
