@@ -6,6 +6,7 @@ use App\User;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
@@ -24,6 +25,7 @@ class AuthController extends Controller
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins {
         AuthenticatesAndRegistersUsers::sendFailedLoginResponse as traitSendFailedLoginResponse;
+        ThrottlesLogins::sendLockoutResponse as traitSendLockoutResponse;
     }
 	
 	
@@ -71,7 +73,7 @@ class AuthController extends Controller
 
     protected function sendFailedLoginResponse(Request $request)
     {
-        if ($request->ajax()) abort(401, "Bad credentials");
+        if ($request->ajax()) return Response::make("Bad credentials", 401);
         return $this->traitSendFailedLoginResponse($request);
     }
 
@@ -80,5 +82,12 @@ class AuthController extends Controller
         if ($request->ajax()) return ""; // return a 200 HTTP code Code
         return redirect()->intended($this->redirectPath()); // copy paste from trait
     }
+
+    protected function sendLockoutResponse(Request $request)
+    {
+        if ($request->ajax()) return Response::make("Too Many Requests", 429);
+        return $this->traitSendLockoutResponse($request);
+    }
+
 
 }
