@@ -11,10 +11,11 @@
 |
 */
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth', 'prefix' => 'api'], function () {
     Route::post('products/create', 'ProductsController@store');
     Route::post('samplings/create', 'SamplingsController@store');
     Route::get('samplings/show/{productId}', 'SamplingsController@show');
+    Route::get('products', 'ProductsController@apiIndex');
 });
 
 Route::auth();

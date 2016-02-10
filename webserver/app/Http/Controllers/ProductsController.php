@@ -14,6 +14,24 @@ use Illuminate\Support\Collection;
 class ProductsController extends Controller
 {
 
+    public function apiIndex () {
+        return Auth::user()->products()->with('sensors.genericSensor')->get(['products.id', 'version']);
+    }
+
+    /**
+     * Get the products registered for the current user
+     */
+    public function index()
+    {
+        $user_id = Auth::User()->id;
+        $Locations = collect(Location::all());
+        $OwnLocations = $Locations->filter(function($item) use($user_id) {
+            return $item->user_id == $user_id;
+        });
+
+        return view('products.index', compact('OwnLocations'));
+    }
+
     public function store(ProductCreationRequest $request) {
         $newProduct = Product::create([
             'id' => $request->id,
@@ -30,20 +48,6 @@ class ProductsController extends Controller
         }
 
         return $newProduct;
-    }
-
-    /**
-     * Get the products registered for the current user
-     */
-    public function index()
-    {
-        $user_id = Auth::User()->id;
-        $Locations = collect(Location::all());
-        $OwnLocations = $Locations->filter(function($item) use($user_id) {
-            return $item->user_id == $user_id;
-        });
-
-        return view('products.index', compact('OwnLocations'));
     }
 
     /**

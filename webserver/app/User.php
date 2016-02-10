@@ -63,4 +63,10 @@ class User extends Model implements AuthenticatableContract,
             ->join('locations', 'locations.product_id', '=', 'products.id')
             ->where('locations.user_id', $this->getKey());
     }
+
+    public function products () {
+        return Product
+            ::join('locations', 'locations.product_id', '=', 'products.id')
+            ->where('locations.user_id', $this->getKey());
+    }
 }
