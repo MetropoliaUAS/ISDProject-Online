@@ -4,9 +4,16 @@
 
 @section('content')
 
-    @foreach ($UserSensors as $ProductSensors)
-        <div class="container">
-            <h2>Products: <a href="{{url('/products',$ProductSensors->first()->product_id)}}">{{$ProductSensors->first()->product_id}}</a> </h2>
+    <div class="container">
+        <h2>Sensor Overview</h2>
+        @if(!count($UserSensors))
+            <p>
+                Sorry, so far you have not bind a product to your account,
+                thus there are no sensors to show. Please add a product first.
+            </p>
+        @endif
+        @foreach ($UserSensors as $ProductSensors)
+            <h3>Product <a href="{{url('/products',$ProductSensors->first()->product_id)}}">{{$ProductSensors->first()->product_id}}</a> </h3>
             <table class="table">
                 <thead>
                 <tr>
@@ -25,6 +32,6 @@
                 @endforeach
                 </tbody>
             </table>
-        </div>
-    @endforeach
+        @endforeach
+    </div>
 @endsection
