@@ -5,15 +5,22 @@
 @section('content')
 
     <div class="container">
+        <h2>Sensor Overview</h2>
+        @if(!count($userSensorsByProductIds))
+            <p>
+                Sorry, so far you have not bind a product to your account,
+                thus there are no sensors to show. Please add a product first.
+            </p>
+        @endif
         @foreach($userSensorsByProductIds as $productId => $userSensors)
             <div class="product-item">
                 <header>
-                    <h2>
-                        Product:
+                    <h3>
+                        Product
                         <a href="{{ url('/products', $productId) }}">
                             {{ $productId }}
                         </a>
-                    </h2>
+                    </h3>
                 </header>
                 <article>
                     <table class="table">
