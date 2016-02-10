@@ -11,9 +11,11 @@
 |
 */
 
-Route::post('/products/create', 'ProductsController@store');
-Route::post('/samplings/create', 'SamplingsController@store');
-Route::get('/samplings/show/{productId}', 'SamplingsController@show');
+Route::group(['middleware' => 'auth'], function () {
+    Route::post('products/create', 'ProductsController@store');
+    Route::post('samplings/create', 'SamplingsController@store');
+    Route::get('samplings/show/{productId}', 'SamplingsController@show');
+});
 
 Route::auth();
 
