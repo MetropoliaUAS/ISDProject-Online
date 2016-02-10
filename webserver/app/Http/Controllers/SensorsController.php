@@ -23,7 +23,9 @@ class SensorsController extends Controller
         $userSensors = Auth::user()->sensors()
             ->with("genericSensor")
             ->get(["sensors.id", "generic_sensor_id", "sensors.product_id"]);
-        return view('sensors.index', compact('userSensors'));
+
+        $userSensorsByProductIds = $userSensors->groupBy('product_id');
+        return view('sensors.index', compact('userSensorsByProductIds'));
     }
 
     /**
@@ -38,7 +40,7 @@ class SensorsController extends Controller
         });
 
         if($sensor)
-            return view('sensors.show',compact('sensor'),compact('samplings'));
+            return view('sensors.show', compact('sensor'), compact('samplings'));
         else
             return 'kein Treffer gefunden für: '. $id . ' ';
     }
