@@ -15,42 +15,15 @@ use Illuminate\Support\Collection;
 class SensorsController extends Controller
 {
 
-    public function getUserLocations()
-    {
-        $user_id = Auth::User()->id;
-        $UserLocations = Location::where('user_id', $user_id)->get();
-        return $UserLocations;
-    }
-
-    public function getUserProducts($LocationCollection)
-    {
-        $UserProducts = collect();
-        foreach($LocationCollection as $location)
-        {
-            $UserProducts->push( Product::find($location->product_id));
-        }
-        return $UserProducts;
-    }
-
-    public function getUserSensors($ProductCollection)
-    {
-        $UserSensors = collect();
-        foreach($ProductCollection as $product)
-        {
-            $UserSensors->push(Sensor::where('product_id',$product->id)->get());
-        }
-        return $UserSensors;
-    }
-
     /**
      * Get the sensors of all registered products for the current user
      */
     public function index()
     {
-        $UserLocations = $this->getUserLocations();
-        $UserProducts = $this->getUserProducts($UserLocations);
-        $UserSensors = $this->getUserSensors($UserProducts);
-        return view('sensors.index', compact('UserSensors'));
+        $userSensors = Auth::user()->sensors()
+            ->with("genericSensor")
+            ->get(["sensors.id", "generic_sensor_id", "sensors.product_id"]);
+        return view('sensors.index', compact('userSensors'));
     }
 
     /**
