@@ -13,3 +13,10 @@
 
 		<!-- Override CSS file - add your own CSS rules -->
 		<link rel="stylesheet" href="{{ URL::asset('css/styles.css') }}">
+		
+		<!--Google charts-->
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		
+		<!-- loading chartist libary from internet scources -->
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+		<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
