@@ -18,7 +18,7 @@ $factory->define(App\Location::class, function (Faker\Generator $faker) use ($fa
         'address' => $faker->streetAddress,
 		'zip' => $faker->postcode,
         'city' => $faker->city,
-        'country_code' => (str_random(10)),
+        'country_code' => $faker->countryCode,
 		'user_id' => $factory->create(App\User::class)->id, 
 		'product_id' => $factory->create(App\Product::class)->id,		
     ];
@@ -57,7 +57,7 @@ $factory->define(App\Sensor::class, function (Faker\Generator $faker) use ($fact
 
 $factory->define(App\Product::class, function (Faker\Generator $faker) {
     return [
-		'id' => rand(1,60000),
+		"id" => str_replace(":", "", $faker->macAddress),
         'version' => 'v1.0.0.0',
     ];
 });
