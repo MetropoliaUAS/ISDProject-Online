@@ -3,10 +3,17 @@
 @section('title', '')
 
 @section('content')
-
-    @if(count($OwnLocations))
-        <div class="container">
-            <h2>Registered products:</h2>
+    <div class="container">
+        <h2>Product overview</h2>
+        @if(!count($OwnLocations))
+            <p>
+                So far you have not added a product to your account.
+                First make sure your device is connected to the internet.
+                Afterwards it will register itself to the server.
+                Then you can enter the <i>product ID</i> in the field below
+                and bind your product to your account.
+            </p>
+        @else
             <table class="table">
                 <thead>
                 <tr>
@@ -30,7 +37,7 @@
 
     {!! Form::open() !!}
     <div class="container">
-        <h2>Add a product:</h2>
+        <h2>Product registration</h2>
         <table class="table">
             <tbody>
             <tr>
