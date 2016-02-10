@@ -17,30 +17,27 @@ class SensorsController extends Controller
 
     public function getUserLocations()
     {
-        $user_id = Auth::user()->id;
-        $AllLocations = collect(Location::all());
-        $UserLocations = $AllLocations->where('user_id',$user_id);
+        $user_id = Auth::User()->id;
+        $UserLocations = Location::where('user_id', $user_id)->get();
         return $UserLocations;
     }
 
     public function getUserProducts($LocationCollection)
     {
-        $AllProducts = collect(Product::all());
         $UserProducts = collect();
         foreach($LocationCollection as $location)
         {
-            $UserProducts->push($AllProducts->where('id',$location->product_id));
+            $UserProducts->push( Product::find($location->product_id));
         }
         return $UserProducts;
     }
 
     public function getUserSensors($ProductCollection)
     {
-        $AllSenors = collect(Sensor::all());
         $UserSensors = collect();
         foreach($ProductCollection as $product)
         {
-            $UserSensors->push($AllSenors->where('product_id',$product->id));
+            $UserSensors->push(Sensor::where('product_id',$product->id)->get());
         }
         return $UserSensors;
     }
@@ -50,14 +47,10 @@ class SensorsController extends Controller
      */
     public function index()
     {
-        //$UserLocations = $this->getUserLocations();
-        //$UserProducts = $this->getUserProducts($UserLocations);
-        //return $UserProducts; //TODO: why is there ANOTHER  BRACKET around and NUMBER infront of the Product
-        //$UserSensors = $this->getUserSensors($UserProducts);
-
-        $UserSensors = Sensor::all();
-        $UserProducts = Product::all();
-        return view('sensors.index', compact('UserProducts'),compact('UserSensors'));
+        $UserLocations = $this->getUserLocations();
+        $UserProducts = $this->getUserProducts($UserLocations);
+        $UserSensors = $this->getUserSensors($UserProducts);
+        return view('sensors.index', compact('UserSensors'));
     }
 
     /**
@@ -80,10 +73,11 @@ class SensorsController extends Controller
     /**
      * Get a list of sensor types and informations
      */
-    public function show_types()
+    public function show_types($id)
     {
         $AllSensorTypes = collect(GenericSensor::All());
-        return view('sensors.types',compact('AllSensorTypes'));
+        $SensorID = $id;
+        return view('sensors.types',compact('AllSensorTypes'),compact('SensorID'));
     }
 
 

@@ -36,5 +36,5 @@ Route::get('/products/{id}', 'ProductsController@show');
 Route::post('/products/{id}', 'ProductsController@update');
 
 Route::get('/sensors', 'SensorsController@index');
-Route::get('/sensors/types', 'SensorsController@show_types');
+Route::get('/sensors/types/{id}', 'SensorsController@show_types');
 Route::get('/sensors/{id}', 'SensorsController@show');

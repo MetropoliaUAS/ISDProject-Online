@@ -19,7 +19,11 @@
                 </thead>
                 <tbody>
                 @foreach ($AllSensorTypes as $sensor)
+                    @if($sensor->id == $SensorID)
+                    <tr bgcolor="red">
+                    @else
                     <tr>
+                    @endif
                         <td>{{$sensor->id}}</td>
                         <td>{{$sensor->name}}</td>
                         <td>{{$sensor->alias}}</td>
