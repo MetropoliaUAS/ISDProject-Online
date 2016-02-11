@@ -24,10 +24,8 @@ class ProductsController extends Controller
     public function index()
     {
         $user_id = Auth::User()->id;
-        $Locations = collect(Location::all());
-        $OwnLocations = $Locations->filter(function($item) use($user_id) {
-            return $item->user_id == $user_id;
-        });
+        // @Jan why be working with locations and not products?? We are in the products controller, no?
+        $OwnLocations = Location::where('user_id', $user_id)->get();
 
         return view('products.index', compact('OwnLocations'));
     }
@@ -56,22 +54,10 @@ class ProductsController extends Controller
     public function show($id)
     {
         //Get Product to Product ID
-        $product=Product::findorfail($id);
+        $product=Product::with('location')->findorfail($id);
 
-        //Get Location to Product ID
-        $location = $this->getLocation($id);
-        return view('products.show',compact('product'),compact('location'));
+        return view('products.show',compact('product'));
 
-    }
-
-    private function getLocation($productId)
-    {
-        $AllLocations = collect(Location::all());
-        $location = $AllLocations->where('product_id',$productId)->first();
-        if(count($location))
-            return $location;
-        else
-            return null;
     }
 
     /**
@@ -83,7 +69,7 @@ class ProductsController extends Controller
         $userid = Auth::User()->id;
 
         //Check if another added this device (some location) or you added this(location with your userid)?
-        $location = $this->getLocation($productId);
+        $location = Location::where('product_id', $productId)->firstOrFail();
         if ($location)
         {
             if ($location->user_id == $userid) {

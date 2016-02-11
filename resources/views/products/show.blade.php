@@ -4,7 +4,7 @@
 
 @section('content')
 
-    {!! Form::open(['url'=>'products/'.$location->id]) !!}
+    {!! Form::open(['url'=>'products/'. $product->location->id]) !!}
     <div class="container">
         <h2>Product {{$product->id}}</h2>
         <table class="table">
@@ -17,7 +17,7 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        {!! Form::text('product_id',$location->product_id, ['readonly'], ['class' => 'form-control'] ) !!}
+                        {!! Form::text('product_id', $product->location->product_id, ['readonly'], ['class' => 'form-control'] ) !!}
                     </div>
                 </td>
             </tr>
@@ -29,7 +29,7 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        {!! Form::text('address',$location->address, ['class' => 'form-control']) !!}
+                        {!! Form::text('address', $product->location->address, ['class' => 'form-control']) !!}
                     </div>
                 </td>
             </tr>
@@ -41,7 +41,7 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        {!! Form::text('zip',$location->zip, ['class' => 'form-control']) !!}
+                        {!! Form::text('zip', $product->location->zip, ['class' => 'form-control']) !!}
                     </div>
                 </td>
             </tr>
@@ -53,7 +53,7 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        {!! Form::text('city',$location->city, ['class' => 'form-control']) !!}
+                        {!! Form::text('city', $product->location->city, ['class' => 'form-control']) !!}
                     </div>
                 </td>
             </tr>
@@ -65,7 +65,7 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        {!! Form::text('country_code',$location->country_code, ['class' => 'form-control']) !!}
+                        {!! Form::text('country_code', $product->location->country_code, ['class' => 'form-control']) !!}
                     </div>
                 </td>
             </tr>
@@ -77,7 +77,7 @@
     </div>
     {!! Form::close() !!}
 
-    {!! Form::open(['url'=>'products/delete/'.$location->id]) !!}
+    {!! Form::open(['url'=>'products/delete/'. $product->location->id]) !!}
     <div class="form-group">
         {!! Form::submit('Delete',['class'=>'btn btn-primary form-control']) !!}
     </div>
