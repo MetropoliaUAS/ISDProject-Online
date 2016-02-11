@@ -9,6 +9,7 @@ use App\Sampling;
 use App\Sensor;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Builder;
 
 use App\Http\Requests;
@@ -16,6 +17,17 @@ use App\Http\Controllers\Controller;
 
 class SamplingsController extends Controller
 {
+
+    private $guard;
+
+    /**
+     * SamplingsController constructor.
+     * @param $guard
+     */
+    public function __construct(Guard $guard)
+    {
+        $this->guard = $guard;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -120,7 +132,10 @@ class SamplingsController extends Controller
      */
     public function show($productId, ShowingSamplingsRequest $request)
     {
-        Product::findOrFail($productId); // Just to throw a failure if the product is not found
+        Product
+            ::join('locations', 'locations.product_id', '=', 'products.id')
+            ->where('locations.user_id', $this->guard->user()->getKey())
+            ->findOrFail($productId); // Just to throw a failure if the product is not found
         $samplingsQueryBuilder = Sampling::query();
 
         $samplingsQueryBuilder->join('sensors', 'samplings.sensor_id', '=', 'sensors.id');
