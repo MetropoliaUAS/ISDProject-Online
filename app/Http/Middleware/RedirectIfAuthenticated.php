@@ -36,8 +36,13 @@ class RedirectIfAuthenticated
     {
         if ($this->auth->check()) {
             return redirect('/home');
-        }
-
+        }		
+		/* Dont work if else is used ...why??? 
+		else
+		{
+			return redirect('/');
+		}
+*/
         return $next($request);
     }
 }

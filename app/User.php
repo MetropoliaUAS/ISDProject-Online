@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\Access\Authorizable;
@@ -40,7 +41,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['first_name', 'last_name', 'email', 'password'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -48,4 +49,24 @@ class User extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    public function location () {
+        return $this->hasOne("App\Location");
+    }
+
+    /**
+     * @return Builder
+     */
+    public function sensors () {
+        return Sensor
+            ::join('products', 'sensors.product_id', '=', 'products.id')
+            ->join('locations', 'locations.product_id', '=', 'products.id')
+            ->where('locations.user_id', $this->getKey());
+    }
+
+    public function products () {
+        return Product
+            ::join('locations', 'locations.product_id', '=', 'products.id')
+            ->where('locations.user_id', $this->getKey());
+    }
 }

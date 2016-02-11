@@ -11,11 +11,33 @@
 |
 */
 
-Route::post('/products/create', 'ProductsController@store');
-
-Route::post('/samplings/create', 'SamplingsController@store');
-Route::get('/samplings/show/{productId}', 'SamplingsController@show');
-
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => 'auth', 'prefix' => 'api'], function () {
+    Route::post('products/create', 'ProductsController@store');
+    Route::post('samplings/create', 'SamplingsController@store');
+    Route::get('samplings/show/{productId}', 'SamplingsController@show');
+    Route::get('products', 'ProductsController@apiIndex');
 });
+
+Route::auth();
+
+//Webpages for guests
+Route::get('/', 'WelcomeController@index');
+//Route::get('/register', 'WelcomeController@register');
+//Route::get('/reset', 'WelcomeController@resetpassword');
+//Route::get('/UserAuth', 'WelcomeController@UserAuth');
+Route::get('/about', 'WelcomeController@about');
+
+//Webpages for users
+Route::get('/home', 'HomeController@home');
+Route::get('/profile', 'HomeController@profile');
+
+Route::get('/products', 'ProductsController@index');
+Route::post('/products', 'ProductsController@check');
+Route::post('/products/add', 'ProductsController@add');
+Route::post('/products/delete/{id}', 'ProductsController@delete');
+Route::get('/products/{id}', 'ProductsController@show');
+Route::post('/products/{id}', 'ProductsController@update');
+
+Route::get('/sensors', 'SensorsController@index');
+Route::get('/sensors/types/{id}', 'SensorsController@show_types');
+Route::get('/sensors/{id}', 'SensorsController@show');

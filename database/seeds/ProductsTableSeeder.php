@@ -13,7 +13,7 @@ class ProductsTableSeeder extends Seeder
     {
         $allGenericSensors = App\GenericSensor::all("id");
 
-        factory(App\Product::class, 15)->create()->each(function (App\Product $newProduct) use ($allGenericSensors) {
+        factory(App\Product::class, 5)->create()->each(function (App\Product $newProduct) use ($allGenericSensors) {
             $newSensorsForEachGeneric = array();
             foreach ($allGenericSensors as $genericSensor) {
                 $newSensorsForEachGeneric[] = new App\Sensor([

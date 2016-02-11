@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use Validator;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
@@ -21,8 +23,12 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
-
+    use AuthenticatesAndRegistersUsers, ThrottlesLogins {
+        AuthenticatesAndRegistersUsers::sendFailedLoginResponse as traitSendFailedLoginResponse;
+        ThrottlesLogins::sendLockoutResponse as traitSendLockoutResponse;
+    }
+	
+	
     /**
      * Create a new authentication controller instance.
      *
@@ -30,7 +36,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        $this->middleware('guest', ['except' => 'logout']);
     }
 
     /**
@@ -42,7 +48,8 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'first_name' => 'required|max:255',
+			'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
         ]);
@@ -57,9 +64,30 @@ class AuthController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'first_name' => $data['first_name'],
+			'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
     }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        if ($request->ajax()) return Response::make("Bad credentials", 401);
+        return $this->traitSendFailedLoginResponse($request);
+    }
+
+    protected function handleUserWasAuthenticated(Request $request, $throttles)
+    {
+        if ($request->ajax()) return ""; // return a 200 HTTP code Code
+        return redirect()->intended($this->redirectPath()); // copy paste from trait
+    }
+
+    protected function sendLockoutResponse(Request $request)
+    {
+        if ($request->ajax()) return Response::make("Too Many Requests", 429);
+        return $this->traitSendLockoutResponse($request);
+    }
+
+
 }
