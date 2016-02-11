@@ -22,7 +22,10 @@ class SensorsController extends Controller
     {
         $userSensors = Auth::user()->sensors()
             ->with("genericSensor")
-            ->get(["sensors.id", "generic_sensor_id", "sensors.product_id"]);
+            ->leftJoin("samplings", "samplings.sensor_id", "=", "sensors.id")
+            ->selectRaw("`sensors`.`id`, `sensors`.`generic_sensor_id`, `sensors`.`product_id`, count(`samplings`.`id`) as `samplings_count`")
+            ->groupBy("sensors.id")
+            ->get();
 
         $userSensorsByProductIds = $userSensors->groupBy('product_id');
         return view('sensors.index', compact('userSensorsByProductIds'));
