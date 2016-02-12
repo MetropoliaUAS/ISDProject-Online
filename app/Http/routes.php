@@ -22,9 +22,6 @@ Route::auth();
 
 //Webpages for guests
 Route::get('/', 'WelcomeController@index');
-//Route::get('/register', 'WelcomeController@register');
-//Route::get('/reset', 'WelcomeController@resetpassword');
-//Route::get('/UserAuth', 'WelcomeController@UserAuth');
 Route::get('/about', 'WelcomeController@about');
 
 //Webpages for users

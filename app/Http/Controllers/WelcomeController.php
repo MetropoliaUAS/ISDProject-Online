@@ -26,16 +26,4 @@ class WelcomeController extends Controller
     {
         return view('pages.about');
     }
-	
-	public function register()
-    {
-        return view('pages.register');
-    }
-	
-	public function resetpassword()
-    {
-		return view('pages.resetpassword');
-    }
-	
-	
 }

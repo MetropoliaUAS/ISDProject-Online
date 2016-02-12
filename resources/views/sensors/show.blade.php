@@ -3,13 +3,22 @@
 @section('title', '')
 
 @section('content')
-<!--
-    <h2>Sensor: {{$sensor->id}}</h2>
-    <p>Just post a graph, data or whatever here, but dynamically for each sensortype (generic_sensor) or groups of them...eg: boolean vs. float</p>
-    @foreach($samplings as $value)
-        {{$value->sampled}}  - at - {{$value->created_at}}</br>
-    @endforeach
--->	
+
+{!! Form::open() !!}
+    <div class="container">
+        <h2>{{$sensor->genericSensor->alias}} Sensor</h2>
+        <div class="form-group">
+            {{ Form::select('age', [
+            '1' => 'last hour',
+            '6' => 'last 6 hours',
+            '24' => 'last 24 hours']
+            ) }}
+            {!! Form::submit('Update',['class'=>'btn btn-primary form-control']) !!}
+        </div>
+    </div>
+{!! Form::close() !!}
+
+
 	<!--Chartist chart -->
 	<div class="ct-chart ct-perfect-fourth" id="chart1"></div>
 	<!--Google chart -->

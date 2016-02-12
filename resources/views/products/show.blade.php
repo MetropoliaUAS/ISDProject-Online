@@ -83,4 +83,8 @@
     </div>
     {!! Form::close() !!}
 
+    <div class="form-group">
+        <a href="{{ url('products') }}" class="btn btn-primary form-control">Back</a>
+    </div>
+
 @endsection
