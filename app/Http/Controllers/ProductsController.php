@@ -69,7 +69,7 @@ class ProductsController extends Controller
         $userid = Auth::User()->id;
 
         //Check if another added this device (some location) or you added this(location with your userid)?
-        $location = Location::where('product_id', $productId)->firstOrFail();
+        $location = Location::where('product_id', $productId)->first();
         if ($location)
         {
             if ($location->user_id == $userid) {
@@ -79,12 +79,12 @@ class ProductsController extends Controller
         }
 
         //Check if Product already selfregistered/exist
-        $products=Product::find($productId);
-        if(!$products) {
+        $product=Product::where('id', $productId)->first();
+        if(!$product) {
             \Session::flash('flash_message','There was never a Product that connected to this Webserver with this ID: ' . $productId);
-            return redirect('products');
+            return redirect('product');
         }
-        return view('products.add',compact('products'));
+        return view('products.add',compact('product'));
     }
 
     /**

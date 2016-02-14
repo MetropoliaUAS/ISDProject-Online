@@ -6,7 +6,7 @@
 
     {!! Form::open(['url'=>'products/add']) !!}
     <div class="container">
-        <h2> Add a product to your profile</h2>
+        <h2> Add a product {{$product->id}} to your profile</h2>
         <table class="table">
             <tbody>
             <tr>
@@ -17,7 +17,7 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        {!! Form::text('product_id',$products->id, ['readonly'], ['class' => 'form-control'] ) !!}
+                        {!! Form::text('product_id',$product->id, ['class' => 'form-control', 'readonly' => 'true'] ) !!}
                     </div>
                 </td>
             </tr>

@@ -27,17 +27,12 @@ class HomeController extends Controller
 	
     public function home()
     {
-		$name ='alf';
-        return view('pages.home')->with('name');
+        return view('pages.home');
 	}
-	
-	public function profile()
+
+    public function profile()
     {
-        $name ='alf';
-        return view('pages.profile')->with([
-		'first_name' => 'Marc',
-		'last_name' => 'Bolder'
-		]);
+        return view('pages.profile');
     }
 	
 
