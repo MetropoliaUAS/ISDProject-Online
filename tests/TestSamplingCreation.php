@@ -66,7 +66,7 @@ class TestSamplingCreation extends TestCase
             'product_id' => App\Product::all()->random()->getkey(),
             'samplings' => $newSamplings
         );
-        $this->post('/samplings/create', $request_body)->see('Created ' . count($newSamplings) . ' sampling(s)');
+        $this->post('api/samplings/create', $request_body)->see('Created ' . count($newSamplings) . ' sampling(s)');
     }
 
     public function getRandomHumidityValue () {

@@ -20,7 +20,7 @@ class TestProductCreationTest extends TestCase
             $genericSensorIds[] = $genericSensor->id;
         }
 
-        $this->post("/products/create", array(
+        $this->post("api/products/create", array(
             "id" => $newProduct->id,
             "version" => $newProduct->version,
             "sensors" => $genericSensorIds
