@@ -12,8 +12,8 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        'products/create',
-        'samplings/create'
+        'api/products/create',
+        'api/samplings/create'
     ];
 
     protected function shouldPassThrough($request)
