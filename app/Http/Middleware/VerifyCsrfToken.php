@@ -22,5 +22,4 @@ class VerifyCsrfToken extends BaseVerifier
         return parent::shouldPassThrough($request);
     }
 
-
 }

@@ -32,7 +32,7 @@ class ProductCreationRequest extends Request
     public function rules()
     {
         return [
-            'id' => 'required|size:12|unique:products',
+            'id' => 'required|unique:products|regex:/^([0-9a-fA-F]{12})$/',
             'version' => 'required|max:255',
             'sensors' => 'required|array|exists:generic_sensors,id'
         ];

@@ -52,7 +52,8 @@ class Handler extends ExceptionHandler
             if ($e instanceof ValidationException) {
                 return Response::json($e->validator->errors()->all(), 400);
             }
-            return Response::make($e->getMessage(), $e->getStatusCode());
+            $statusCode = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 400;
+            return Response::make($e->getMessage(), $statusCode);
         }
 
         if (config('app.debug'))
