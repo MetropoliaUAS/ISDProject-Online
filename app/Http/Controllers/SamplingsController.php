@@ -9,6 +9,7 @@ use App\Sampling;
 use App\Sensor;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Builder;
 
 use App\Http\Requests;
@@ -16,6 +17,17 @@ use App\Http\Controllers\Controller;
 
 class SamplingsController extends Controller
 {
+
+    private $guard;
+
+    /**
+     * SamplingsController constructor.
+     * @param $guard
+     */
+    public function __construct(Guard $guard)
+    {
+        $this->guard = $guard;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -79,11 +91,10 @@ class SamplingsController extends Controller
         $samplings_groupBy_gsIds->forget("");
 
         $sensors =
-            Sensor::join('generic_sensors', 'sensors.generic_sensor_id', '=', 'generic_sensors.id')
-            ->join('products', 'sensors.product_id', '=', 'products.id')
-            ->whereIn('generic_sensors.id', $samplings_groupBy_gsIds->keys())
-            ->where('products.id', $request->product_id)
-            ->get(['sensors.id', 'sensors.generic_sensor_id']);
+            Sensor::join('products', 'sensors.product_id', '=', 'products.id')
+                ->whereIn('sensors.generic_sensor_id', $samplings_groupBy_gsIds->keys())
+                ->where('products.id', $request->product_id)
+                ->get(['sensors.id', 'sensors.generic_sensor_id']);
 
         $sensor_for_gsId = array();
         foreach ($sensors as $sensor) {
@@ -100,6 +111,7 @@ class SamplingsController extends Controller
                 $created_at = Carbon::createFromTimestamp(strtotime($sampling['created_at']));
             }
 
+            if ( ! array_has($sensor_for_gsId, $sampling['generic_sensor_id']) ) continue;
             array_push($newSamplings, array(
                 'sensor_id' => $sensor_for_gsId[$sampling['generic_sensor_id']],
                 'sampled' => $sampling['value'],
@@ -107,8 +119,8 @@ class SamplingsController extends Controller
             ));
         }
 
-        $successfully_inserted = DB::table('samplings')->insert($newSamplings);
-        return $successfully_inserted ? 'Created ' . count($newSamplings) . ' sampling(s)' : 'Error during inserting';
+        DB::table('samplings')->insert($newSamplings);
+        return 'Created ' . count($newSamplings) . ' sampling(s)';
     }
 
     /**
@@ -120,7 +132,10 @@ class SamplingsController extends Controller
      */
     public function show($productId, ShowingSamplingsRequest $request)
     {
-        Product::findOrFail($productId); // Just to throw a failure if the product is not found
+        Product
+            ::join('locations', 'locations.product_id', '=', 'products.id')
+            ->where('locations.user_id', $this->guard->user()->getKey())
+            ->findOrFail($productId); // Just to throw a failure if the product is not found
         $samplingsQueryBuilder = Sampling::query();
 
         $samplingsQueryBuilder->join('sensors', 'samplings.sensor_id', '=', 'sensors.id');

@@ -3,50 +3,74 @@
 @section('title', '')
 
 @section('content')
-<!--
-    <h2>Sensor: {{$sensor->id}}</h2>
-    <p>Just post a graph, data or whatever here, but dynamically for each sensortype (generic_sensor) or groups of them...eg: boolean vs. float</p>
-    @foreach($samplings as $value)
-        {{$value->sampled}}  - at - {{$value->created_at}}</br>
-    @endforeach
--->	
-	<!--Chartist chart -->
-	<div class="ct-chart ct-perfect-fourth" id="chart1"></div>
-	<!--Google chart -->
-	<div id="curve_chart"></div>
-	
-	<!--Chartist script -->
-	<script>
-		// Initialize a Line chart in the container with the ID chartX
-		var data1 = {
-				labels: [@foreach($samplings as $value) , @endforeach],
-				series: [[@foreach($samplings as $value) {{$value->sampled}}, @endforeach]]
-			};
-		new Chartist.Line('#chart1', data1);
-	</script>
-	
-	<!--Google script -->
-	<script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+    <div class="container">
+        <div class="row">
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-			['DateTime', 'Value'],
-		@foreach($samplings as $value)
-			[,  {{$value->sampled}}],
-		@endforeach  
-        ]);
+            <div class="col-md-4">
+                <h2>{{$sensor->genericSensor->alias}} Sensor</h2>
+                {!! Form::open() !!}
+                <div class="form-group">
+                    <select class="c-select">
+                        <option selected>Open this select menu</option>
+                        <option value="1">last hour</option>
+                        <option value="6">last 6 hours</option>
+                        <option value="24">last 24 hours</option>
+                    </select>
+                    {!! Form::submit('Update',['class'=>'btn btn-primary form-control']) !!}
+                </div>
+                {!! Form::close() !!}
+            </div>
 
-        var options = {
-          title: 'Measurement',
-          curveType: 'function',
-          legend: { position: 'bottom' }
-        };
+            <div class="col-md-12">
 
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+			<!--Chartist chart -->
+			<h4>Value in {{$sensor->genericSensor->unit}} / Period: {{$samplings->first()->created_at}} to {{$samplings->last()->created_at}}</h4>
+			<div class="ct-chart ct-perfect-fifth" id="chartist_chart"></div>
 
-        chart.draw(data, options);
-      }
-    </script>
+			<!--Chartist script -->
+			<script>
+				// Initialize a Line chart in the container with the ID chartX
+				var chart_data = {
+						labels: [@foreach($samplings as $value) , @endforeach],
+						series: [[@foreach($samplings as $value) {{$value->sampled}}, @endforeach]]
+					};
+				var chart_options = {
+					fullWidth: true,
+					showArea: false,
+					// No interpolation
+					lineSmooth: false,
+					// Don't draw the line chart points
+					showPoint: false,
+					// X-Axis specific configuration
+					axisX: {
+						// Disable the grid for this axis
+						showGrid: false,
+						// Don't show the label
+						showLabel: false
+					},
+					// Y-Axis specific configuration
+					axisY: {
+						// Offset from the left to see labels
+						offset: 60,
+						// Adding units to the values
+						labelInterpolationFnc: function(value) {
+						  return value + '{{$sensor->genericSensor->unit}}';
+						}
+					}
+				};
+				new Chartist.Line('#chartist_chart', chart_data, chart_options);
+			</script>
+			
+			<!--Chartist style -->
+			<style>
+			.ct-series-a .ct-line {
+				stroke-linecap: round;
+				/* Set the colour of this series line */
+				stroke: teal;
+			}
+
+			</style>
+            </div>
+        </div>
+    </div>
 @endsection

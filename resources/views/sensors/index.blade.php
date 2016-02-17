@@ -39,8 +39,7 @@
                                             {{$sensor->genericSensor->alias}}
                                         </a>
                                     </td>
-                                    {{-- fixme --}}
-                                    <td>{{count($sensor->samplings)}}</td>
+                                    <td>{{ $sensor->samplings_count }}</td>
                                     <td>
                                         <a href="{{url('/sensors/types', $sensor->generic_sensor_id)}}">
                                             {{$sensor->generic_sensor_id}} {{$sensor->genericSensor->name}}

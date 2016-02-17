@@ -10,7 +10,7 @@ abstract class Request extends FormRequest
 {
     protected function failedValidation(Validator $validator)
     {
-        if (config('app.debug')) throw new ValidationException($validator);
+        if (config('app.debug') || Request::is("api/*")) throw new ValidationException($validator);
         return parent::failedValidation($validator);
     }
 

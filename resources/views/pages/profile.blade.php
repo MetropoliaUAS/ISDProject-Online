@@ -6,6 +6,7 @@
 
 @section('content')
 
-<h2> User profile, maybe changing some informations and Account deletion</h2>
-{{$first_name}} {{$last_name}}
+<h2>Your Profile</h2>
+{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
+
 @endsection

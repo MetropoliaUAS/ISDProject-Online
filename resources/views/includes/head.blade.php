@@ -3,7 +3,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<title>ISD Project</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" lang="en" content="ADD SITE DESCRIPTION">
+		<meta name="Description" lang="en" content="Students project to develop a bulb shaped climate tracker">
 		<meta name="author" content="ADD AUTHOR INFORMATION">
 		<meta name="robots" content="index, follow">
 

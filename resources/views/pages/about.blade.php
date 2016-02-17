@@ -4,6 +4,9 @@
 
 @section('content')
 
-<h2> Some Information about basic webapp stuff and group /project</h2>
+<h2>About</h2>
+<p>
+This website represent a cooperatice project between the Metropolia UAS and the Osnabrück HS. The Task is to design a bulb like sensor device for gas detection and climate values.
 
+</p>
 @endsection

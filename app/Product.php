@@ -22,4 +22,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Sensor');
     }
+
+    public function location ()
+    {
+        return $this->hasOne("App\Location");
+    }
 }

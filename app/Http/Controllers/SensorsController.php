@@ -22,7 +22,10 @@ class SensorsController extends Controller
     {
         $userSensors = Auth::user()->sensors()
             ->with("genericSensor")
-            ->get(["sensors.id", "generic_sensor_id", "sensors.product_id"]);
+            ->leftJoin("samplings", "samplings.sensor_id", "=", "sensors.id")
+            ->selectRaw("`sensors`.`id`, `sensors`.`generic_sensor_id`, `sensors`.`product_id`, count(`samplings`.`id`) as `samplings_count`")
+            ->groupBy("sensors.id")
+            ->get();
 
         $userSensorsByProductIds = $userSensors->groupBy('product_id');
         return view('sensors.index', compact('userSensorsByProductIds'));
@@ -34,13 +37,18 @@ class SensorsController extends Controller
     public function show($id)
     {
         $sensor = Sensor::find($id);
-        $allsamplings = Sampling::all();
+		/*
+		$allsamplings = Sampling::all();
         $samplings = $allsamplings->filter(function($item) use ($id){
             return $item->sensor_id == $id;
         });
-
+		*/
+		$samplings = Sampling::where('sensor_id', '=', $id)
+			->orderBy('created_at', 'asc')
+			->get();
+		
         if($sensor)
-            return view('sensors.show', compact('sensor'), compact('samplings'));
+            return view('sensors.show', compact('sensor','samplings'));
         else
             return 'kein Treffer gefunden für: '. $id . ' ';
     }
