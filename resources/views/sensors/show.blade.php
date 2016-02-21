@@ -66,9 +66,8 @@
 			.ct-series-a .ct-line {
 				stroke-linecap: round;
 				/* Set the colour of this series line */
-				stroke: teal;
+				stroke: white;
 			}
-
 			</style>
             </div>
         </div>
