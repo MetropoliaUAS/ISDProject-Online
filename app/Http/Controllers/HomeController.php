@@ -11,24 +11,22 @@ use phpDocumentor\Reflection\DocBlock\Type\Collection;
 class HomeController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+    * Create a new controller instance.
+    */
     public function __construct()
     {
         $this->middleware('auth');
     }
-	
-	public function CheckAuth()
-	{
-		return Auth::check();
-	}
-	
+
+    public function CheckAuth()
+    {
+        return Auth::check();
+    }
+
     public function home()
     {
         return view('pages.home');
-	}
+    }
 
     public function profile()
     {
