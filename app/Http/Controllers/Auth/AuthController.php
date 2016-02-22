@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Foundation\Validation\ValidationException;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,6 +26,7 @@ class AuthController extends Controller
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins {
         AuthenticatesAndRegistersUsers::sendFailedLoginResponse as traitSendFailedLoginResponse;
+        AuthenticatesAndRegistersUsers::register as traitRegister;
         ThrottlesLogins::sendLockoutResponse as traitSendLockoutResponse;
     }
 	
@@ -87,6 +89,15 @@ class AuthController extends Controller
     {
         if ($request->ajax()) return Response::make("Too Many Requests", 429);
         return $this->traitSendLockoutResponse($request);
+    }
+
+    public function register(Request $request)
+    {
+        try {
+            $this->traitRegister($request);
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator->errors());
+        }
     }
 
 
