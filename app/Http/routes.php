@@ -40,4 +40,5 @@ Route::post('/products/{id}', 'ProductsController@update');
 
 Route::get('/sensors', 'SensorsController@index');
 Route::get('/sensors/types/{id}', 'SensorsController@show_types');
-Route::get('/sensors/{id}', 'SensorsController@show');
+
+Route::get('/dashboard', 'HomeController@dashboard');

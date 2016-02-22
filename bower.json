@@ -10,6 +10,8 @@
   "moduleType": [],
   "dependencies": {
     "jquery": "~2.1.4",
-    "bootstrap-sass": "bootstrap-sass-official#~3.3.6"
+    "bootstrap-sass": "bootstrap-sass-official#~3.3.6",
+    "chartist": "^0.9.6",
+    "vue": "^1.0.16"
   }
 }

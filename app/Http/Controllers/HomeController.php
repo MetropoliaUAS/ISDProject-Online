@@ -32,6 +32,9 @@ class HomeController extends Controller
     {
         return view('pages.profile');
     }
-	
+
+    public function dashboard () {
+        return view('pages.dashboard');
+    }
 
 }
