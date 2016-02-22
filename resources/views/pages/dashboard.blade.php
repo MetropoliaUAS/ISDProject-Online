@@ -28,7 +28,6 @@
                 </ul>
             </li>
         </ul>
-        <pre>@{{ $data | json }}</pre>
     </div>
     <div id="chart" class="col-md-9">
 
