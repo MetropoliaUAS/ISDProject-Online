@@ -9,19 +9,16 @@
 
 @section('content')
     <div id="products" class="col-md-3">
-        <ul>
+        <ul class="products-list">
             <li class="product-item" v-for="product in products">
                 <h4>@{{ product.id }}</h4>
-                <ul>
-                    <li class="sensor-item" v-for="sensor in product.sensors">
-                        <a href="#"
-                           class="btn"
-                           data-product-id="@{{ product.id }}"
-                           data-sensor-id="@{{ sensor.id }}"
-                           data-generic-sensor-id="@{{ sensor.generic_sensor_id }}"
-                           v-on:click.prevent="onSensorClick(sensor)"
-                           v-bind:class="{ active: selection.selectedSensorId === sensor.id }"
-                        >
+                <ul class="sensors-list">
+                    <li class="sensor-item"
+                        v-for="sensor in product.sensors"
+                        v-on:click.prevent="onSensorClick(sensor)"
+                        v-bind:class="{ active: selection.selectedSensorId === sensor.id }"
+                    >
+                        <a href="#">
                             @{{ genericSensorAlias(sensor.generic_sensor_id) }}
                         </a>
                     </li>

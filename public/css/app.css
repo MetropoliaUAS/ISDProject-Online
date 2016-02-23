@@ -7264,6 +7264,26 @@ button.close {
   .hidden-print {
     display: none !important; } }
 /* line 9, ../../resources/assets/sass/app.scss */
+.main-footer {
+  margin-top: 70px;
+  padding-bottom: 30px; }
+
+/* line 14, ../../resources/assets/sass/app.scss */
+.products-list,
+.sensors-list {
+  list-style: none;
+  padding-left: 0; }
+
+/* line 19, ../../resources/assets/sass/app.scss */
+.sensor-item {
+  padding: 6px 12px; }
+  /* line 22, ../../resources/assets/sass/app.scss */
+  .sensor-item.active {
+    font-style: italic;
+    border-left: 3px solid #337ab7;
+    text-decoration: underline; }
+
+/* line 29, ../../resources/assets/sass/app.scss */
 .ct-label.ct-horizontal.ct-end {
   -moz-transform: rotate(-50deg);
   -ms-transform: rotate(-50deg);
@@ -7271,6 +7291,6 @@ button.close {
   transform: rotate(-50deg);
   font-size: 1em; }
 
-/* line 14, ../../resources/assets/sass/app.scss */
+/* line 34, ../../resources/assets/sass/app.scss */
 .ct-label.ct-vertical.ct-start {
   font-size: 0.9em; }

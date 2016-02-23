@@ -6,6 +6,26 @@ body {
     //background: -webkit-radial-gradient(10% 0, farthest-side ellipse, rgba(102,105,104,0.9), rgba(93,112,119,0.89), rgba(160,174,150,0.9));
 }
 
+.main-footer {
+    margin-top: 70px;
+    padding-bottom: 30px;
+}
+
+.products-list,
+.sensors-list {
+    list-style: none;
+    padding-left: 0;
+}
+.sensor-item {
+    padding: 6px 12px;
+
+    &.active {
+        font-style: italic;
+        border-left: 3px solid $btn-primary-bg;
+        text-decoration: underline;
+    }
+}
+
 .ct-label.ct-horizontal.ct-end {
     @include rotate(-50deg);
     font-size: 1em;
