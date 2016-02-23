@@ -1,3 +1,17 @@
- @import "../bower/bootstrap-sass/assets/stylesheets/bootstrap";
+@import '../bower/bootstrap-sass/assets/stylesheets/bootstrap';
+@import 'compass';
 
-// -webkit-radial-gradient(10% 0, farthest-side ellipse, rgba(102,105,104,0.9), rgba(93,112,119,0.89), rgba(160,174,150,0.9));
+
+body {
+    //background: -webkit-radial-gradient(10% 0, farthest-side ellipse, rgba(102,105,104,0.9), rgba(93,112,119,0.89), rgba(160,174,150,0.9));
+}
+
+.ct-label.ct-horizontal.ct-end {
+    @include rotate(-50deg);
+    font-size: 1em;
+}
+
+.ct-label.ct-vertical.ct-start {
+    font-size: 0.9em;
+}
+

@@ -1,4 +1,4 @@
-(function ($, Vue) {
+(function ($, Vue, Chartist) {
     "use strict";
 
 //    var chart_data = {
@@ -46,7 +46,7 @@
             });
         });
 
-        //this.chart = new Chart();
+        this.chart = new Chart();
     };
 
     Dashboard.prototype.productIdBySensor = function (sensor) {
@@ -73,16 +73,18 @@
     };
 
     Dashboard.prototype.getNewSamples = function () {
-        var samplesUrl, requestParams;
+        var self = this,
+            samplesUrl, requestParams;
 
         samplesUrl = window.location.origin + "/api/samplings/show/" + this.selection.selectedProductId;
         requestParams = {
             generic_sensor_id: this.selection.selectedGenericSensorId,
-            start: "2001-01-01"
+            start: "2001-01-01",
+            limit: 10
         };
         // change second param to have a better filter
         $.getJSON(samplesUrl, requestParams, function (data) {
-            console.log(data);
+            self.chart.update( new GraphData(data) );
         });
     };
 
@@ -123,6 +125,10 @@
         this.alias = raw.alias;
         this.symbol = raw.symbol;
         this.unit = raw.unit;
+        this.range = {
+            low: raw.range.split('-')[0],
+            high: raw.range.split('-')[1]
+        };
     }
 
     // used to not duplicate object for nothing
@@ -145,35 +151,88 @@
     function Chart () {
         var chart_options = {
             fullWidth: true,
+            height: 500,
+
             showArea: false,
-            // No interpolation
-            lineSmooth: false,
-            // Don't draw the line chart points
             showPoint: false,
-            // X-Axis specific configuration
-            axisX: {
-                // Disable the grid for this axis
-                showGrid: false
+            chartPadding: {
+                right: 40
             },
-            // Y-Axis specific configuration
-            axisY: {
-                // Offset from the left to see labels
-                offset: 40
-                // Adding units to the values
-                //labelInterpolationFnc: function(value) {
-                //    return value + '{{$sensor->genericSensor->unit}}';
-                //}
+            axisX: {
+                showGrid: false
             }
         };
-        this.chart = new Chartist.Line('#chartist_chart', null, chart_options);
+        this.chart = new Chartist.Line('#chart', null, chart_options);
     }
 
-    Chart.prototype.update = function (newData) {
-        this.chart.update(newData);
+    Chart.prototype.buildNewOpts = function () {
+        var sensorUnit;
+
+        sensorUnit = dashboard.genericSensorsRepo.find(
+            dashboard.selection.selectedGenericSensorId
+        ).unit;
+
+        return {
+            axisX: {
+                labelInterpolationFnc: function (value, index, data) {
+                    var modulus = Math.round(data.length / 15);
+
+                    if (modulus == 0) return value;
+                    return index % modulus === 0 ? value : '';
+                }
+            },
+            axisY: {
+                // Adding units to the values
+                labelInterpolationFnc: function(value) {
+                    return value + " " + sensorUnit;
+                }
+            }
+        }
+    };
+
+    Chart.prototype.update = function (graphData) {
+        var newData = graphData.getData(),
+            newOpts = this.buildNewOpts();
+
+        // We have to fix it, since chartist has an error if we have only 1 value.
+        // So the workaround is to duplicate the labels and value
+        if (graphData.count() == 1) {
+            newData = this.fixNewData(newData);
+        }
+        this.chart.update(newData, newOpts, true);
+    };
+
+    Chart.prototype.fixNewData = function (newData) {
+        newData.labels.push(newData.labels[0]);
+        newData.series[0].push(newData.series[0][0]);
+        return newData;
+    };
+
+    function GraphData (raw) {
+        var self = this;
+
+        self.labels = [];
+        self.serie = [];
+
+        $.each(raw, function (index, rawSample) {
+            self.labels.push(rawSample.created_at);
+            self.serie.push(rawSample.sampled);
+        });
+    }
+
+    GraphData.prototype.getData = function () {
+        return {
+            labels: this.labels,
+            series: [this.serie]
+        };
+    };
+
+    GraphData.prototype.count = function () {
+        return this.serie.length;
     };
 
     $(document).on("ready", function () {
         window.dashboard = new Dashboard();
         dashboard.run();
     });
-})(jQuery, Vue);
+})(jQuery, Vue, Chartist);

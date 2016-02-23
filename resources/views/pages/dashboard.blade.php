@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-    <div id="products" class="col-md-12">
+    <div id="products" class="col-md-3">
         <ul>
             <li class="product-item" v-for="product in products">
                 <h4>@{{ product.id }}</h4>
@@ -29,8 +29,8 @@
             </li>
         </ul>
     </div>
-    <div id="chart" class="col-md-9">
-
+    <div class="col-md-9">
+        <div id="chart"></div>
     </div>
 @endsection
 

@@ -1,4 +1,5 @@
 var elixir = require('laravel-elixir');
+require('laravel-elixir-sass-compass');
 
 /*
  |--------------------------------------------------------------------------
@@ -13,7 +14,7 @@ var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
     mix
-        .sass('app.scss')
+        .compass('app.scss')
         .scripts(['dashboard.js'], 'public/js/dashboard.js')
         .scripts([
             '../../assets/bower/jquery/dist/jquery.min.js',
