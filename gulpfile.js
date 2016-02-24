@@ -1,4 +1,5 @@
 var elixir = require('laravel-elixir');
+require('laravel-elixir-sass-compass');
 
 /*
  |--------------------------------------------------------------------------
@@ -13,10 +14,12 @@ var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
     mix
-        .sass('app.scss')
+        .compass('app.scss')
+        .scripts(['dashboard.js'], 'public/js/dashboard.js')
         .scripts([
             '../../assets/bower/jquery/dist/jquery.min.js',
-            '../../assets/bower/bootstrap-sass/assets/javascripts/bootstrap.min.js'
+            '../../assets/bower/bootstrap-sass/assets/javascripts/bootstrap.min.js',
+            '../../assets/bower/vue/dist/vue.min.js'
         ], 'public/js/vendor.js')
         .copy(
             'resources/assets/bower/bootstrap-sass/assets/fonts/bootstrap',

@@ -32,28 +32,6 @@ class SensorsController extends Controller
     }
 
     /**
-     * Get a specific sensor
-     */
-    public function show($id)
-    {
-        $sensor = Sensor::find($id);
-		/*
-		$allsamplings = Sampling::all();
-        $samplings = $allsamplings->filter(function($item) use ($id){
-            return $item->sensor_id == $id;
-        });
-		*/
-		$samplings = Sampling::where('sensor_id', '=', $id)
-			->orderBy('created_at', 'asc')
-			->get();
-		
-        if($sensor)
-            return view('sensors.show', compact('sensor','samplings'));
-        else
-            return 'kein Treffer gefunden für: '. $id . ' ';
-    }
-
-    /**
      * Get a list of sensor types and informations
      */
     public function show_types($id)

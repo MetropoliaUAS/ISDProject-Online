@@ -18,6 +18,7 @@
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/sensors">Sensors</a></li>
                 <li><a href="/products">Products</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/logout">Logout</a></li>
@@ -45,6 +46,7 @@
     </div>
 
 </div>
+@yield('jslib')
 </body>
 </html>
 
