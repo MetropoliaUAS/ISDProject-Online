@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Sampling extends Model
 {
-	public $timestamps = false; //no elo timestamps here (updated_at not needed)
+    const UPDATED_AT = "created_at"; // we are never using the update method. so should be a good workaround
 
     protected $fillable = ['sensor_id', 'sampled', 'created_at'];
 

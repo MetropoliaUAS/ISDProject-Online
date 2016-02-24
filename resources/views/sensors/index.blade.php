@@ -35,7 +35,7 @@
                             @foreach($userSensors as $sensor)
                                 <tr>
                                     <td>
-                                        <a href="{{url('/sensors', $sensor->id)}}">
+                                        <a href="{{ url('/dashboard') }}?sensor={{ $sensor->id }}">
                                             {{$sensor->genericSensor->alias}}
                                         </a>
                                     </td>

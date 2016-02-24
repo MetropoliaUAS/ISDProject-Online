@@ -12,7 +12,7 @@
 		<link rel="shortcut icon" href="favicon.ico">
 
 		<!-- Override CSS file - add your own CSS rules -->
-		<link rel="stylesheet" href="{{ URL::asset('css/styles.css') }}">
+		<link rel="stylesheet" href="{{ URL::asset('css/app.css') }}">
 		
 		<!--Google charts-->
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

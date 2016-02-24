@@ -19,7 +19,7 @@ class GenericSensorTableSeeder extends Seeder
 			'name' => 'MD62',
 			'symbol' => 'CO^2',
 			'unit' => 'ppm',
-			'range' => '300-2500',
+			'range' => '0-40000',
 			'producer' => 'Hanwei Electronics',
         ]);
 		
@@ -28,7 +28,7 @@ class GenericSensorTableSeeder extends Seeder
 			'name' => 'MQ7',
 			'symbol' => 'CO',
 			'unit' => 'ppm',
-			'range' => '100-4000',
+			'range' => '0-4000',
 			'producer' => 'Hanwei Electronics',
         ]);
 		
@@ -37,7 +37,7 @@ class GenericSensorTableSeeder extends Seeder
 			'name' => 'MAX4465',
 			'symbol' => 'Vol',
 			'unit' => 'dB',
-			'range' => '0-100',
+			'range' => '0-120',
 			'producer' => 'Challenge Electronics',
         ]);
 		
@@ -46,7 +46,7 @@ class GenericSensorTableSeeder extends Seeder
 			'name' => 'TSL2561',
 			'symbol' => 'Ev',
 			'unit' => 'Lux',
-			'range' => '50-500',
+			'range' => '0-2000',
 			'producer' => 'TAOS',
         ]);
 		
@@ -64,7 +64,7 @@ class GenericSensorTableSeeder extends Seeder
 			'name' => 'BME280',
 			'symbol' => 'T',
 			'unit' => '°C',
-			'range' => '0-40',
+			'range' => '0-80',
 			'producer' => 'Bosch',
         ]);
 		
@@ -82,7 +82,7 @@ class GenericSensorTableSeeder extends Seeder
 			'name' => 'BME280',
 			'symbol' => 'P',
 			'unit' => '3hPa',
-			'range' => '300-2200',
+			'range' => '0-2200',
 			'producer' => 'Bosch',
         ]);
 		
@@ -90,7 +90,7 @@ class GenericSensorTableSeeder extends Seeder
 			'alias' => 'Smoke',
 			'name' => 'Optical',
 			'symbol' => 'S',
-			'unit' => '',
+			'unit' => '-',
 			'range' => 'Binary',
 			'producer' => '-',
         ]);
@@ -99,7 +99,7 @@ class GenericSensorTableSeeder extends Seeder
 			'alias' => 'Buzzer',
 			'name' => 'KEYES S',
 			'symbol' => 'B',
-			'unit' => '',
+			'unit' => '-',
 			'range' => 'Binary',
 			'producer' => '-',
         ]);

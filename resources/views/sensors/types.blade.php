@@ -6,15 +6,16 @@
 
     @if(count($AllSensorTypes))
         <div class="container">
-            <h2>Registered sensors:</h2>
+            <h2>Registered Sensors:</h2>
             <table class="table">
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>name</th>
-                    <th>alias</th>
-                    <th>range</th>
-                    <th>producer</th>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>Range</th>
+					<th>Unit</th>
+                    <th>Producer</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -28,6 +29,7 @@
                         <td>{{$sensor->name}}</td>
                         <td>{{$sensor->alias}}</td>
                         <td>{{$sensor->range}}</td>
+						<td>{{$sensor->unit}}</td>
                         <td>{{$sensor->producer}}</td>
                     </tr>
                 @endforeach

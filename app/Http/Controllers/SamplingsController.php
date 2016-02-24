@@ -132,7 +132,7 @@ class SamplingsController extends Controller
      */
     public function show($productId, ShowingSamplingsRequest $request)
     {
-        Product
+        $product = Product
             ::join('locations', 'locations.product_id', '=', 'products.id')
             ->where('locations.user_id', $this->guard->user()->getKey())
             ->findOrFail($productId); // Just to throw a failure if the product is not found
@@ -143,23 +143,32 @@ class SamplingsController extends Controller
         $samplingsQueryBuilder->join('products', 'sensors.product_id', '=', 'products.id');
         $samplingsQueryBuilder->where('products.id', $productId);
 
+        $samplingsQueryBuilder->orderBy('samplings.created_at', 'desc');
+
         $limit = $request->has('limit') && $request->limit < 1000 ? $request->limit : 1000;
-
-        $timeFiltersApplied = $this->filterResultsInTime($samplingsQueryBuilder, $request);
-
-
-        if ( ! $timeFiltersApplied)
-        {
-            $samplingsQueryBuilder->whereDate('samplings.created_at', '=', Carbon::today()->toDateString());
-        }
 
         if ($request->generic_sensor_id)
         {
             $samplingsQueryBuilder->where('generic_sensors.id', $request->generic_sensor_id);
         }
 
-        $samplingsQueryBuilder->orderBy('samplings.created_at', 'desc');
+        $timeFiltersApplied = $this->filterResultsInTime($samplingsQueryBuilder, $request, $product);
+
+        if ( ! $timeFiltersApplied)
+        {
+            $samplingsQueryBuilder->whereDate('samplings.created_at', '=', Carbon::today()->toDateString());
+        }
+
         $samplingsQueryBuilder->take($limit);
+
+//        if ($timeFiltersApplied && array_has(["week", "month", "year"], $request->timeFilter)) {
+//            return $samplingsQueryBuilder->selectRaw("
+//                samplings.sensor_id,
+//                max(samplings.sampled),
+//                generic_sensors.id as generic_sensor_id,
+//                min(samplings.created_at)
+//            ");
+//        }
 
         return $samplingsQueryBuilder->get(
             array(
@@ -172,7 +181,7 @@ class SamplingsController extends Controller
         );
     }
 
-    private function filterResultsInTime(Builder &$samplingsQueryBuilder, $request)
+    private function filterResultsInTime(Builder &$samplingsQueryBuilder, $request, Product $product)
     {
         if ($request->date)
         {
@@ -199,6 +208,48 @@ class SamplingsController extends Controller
             if ($request->end)
             {
                 $samplingsQueryBuilder->whereDate('samplings.created_at', '<=', $request->end);
+            }
+
+            return true;
+        }
+
+        if ($request->timeFilter)
+        {
+            $secondQueryBuilder = clone $samplingsQueryBuilder;
+            $lastSampling =
+                $secondQueryBuilder->take(1)->get(["samplings.created_at"])->first()
+                    ->created_at->copy();
+
+            switch ($request->timeFilter) {
+                case "hour":
+                    $lastHour = $lastSampling->subHour()->toDateTimeString();
+                    $samplingsQueryBuilder->where("samplings.created_at", ">", $lastHour);
+                    break;
+
+                case "today":
+                    $today = $lastSampling->toDateString();
+                    $samplingsQueryBuilder->whereDate("samplings.created_at", "=", $today);
+                    break;
+
+                case "yesterday":
+                    $lastDay = $lastSampling->subDay()->toDateString();
+                    $samplingsQueryBuilder->whereDate("samplings.created_at", "=", $lastDay);
+                    break;
+
+                case "week":
+                    $lastWeek = $lastSampling->subWeek()->toDateTimeString();
+                    $samplingsQueryBuilder->where("samplings.created_at", ">", $lastWeek);
+                    break;
+
+                case "month":
+                    $lastMonth = $lastSampling->subMonth()->toDateTimeString();
+                    $samplingsQueryBuilder->where("samplings.created_at", ">", $lastMonth);
+                    break;
+
+                case "year":
+                    $lastYear = $lastSampling->subYear()->toDateTimeString();
+                    $samplingsQueryBuilder->where("samplings.created_at", ">", $lastYear);
+                    break;
             }
 
             return true;
