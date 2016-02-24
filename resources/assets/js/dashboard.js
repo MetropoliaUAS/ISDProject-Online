@@ -1,10 +1,16 @@
 (function ($, Vue, Chartist) {
     "use strict";
 
-//    var chart_data = {
-//        labels: [@foreach($samplings as $value) , @endforeach],
-//    series: [[@foreach($samplings as $value) {{$value->sampled}}, @endforeach]]
-//};
+    // helper function
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
 
     function Dashboard () {
         this.products = [];
@@ -19,7 +25,7 @@
         var self = this;
 
         return new Vue({
-            el: '#products',
+            el: '#dashboard-wrapper',
             data: {
                 products: self.products,
                 selection: self.selection
@@ -27,6 +33,9 @@
             methods: {
                 onSensorClick: function (sensor) {
                     dashboard.selection.selectSensor(sensor);
+                },
+                onTimeFilterClick: function (event) {
+                    dashboard.selection.selectTimeFilter( $(event.target).data("time-filter") );
                 },
                 genericSensorAlias: function (genericSensorId) {
                     var genericSensor = dashboard.genericSensorsRepo.find(genericSensorId);
@@ -38,15 +47,39 @@
 
     Dashboard.prototype.run = function () {
         var self = this,
-            productsUrl = window.location.origin + "/api/products";
+            productsUrl = window.location.origin + "/api/products",
+            sensorJump;
 
         $.getJSON(productsUrl, null, function (data) {
             $.each(data, function (index, item) {
                 self.products.push( new Product(item) );
             });
+
+            sensorJump = parseInt(getParameterByName("sensor"));
+            if (sensorJump) {
+                self.selection.selectSensor(sensorJump);
+            }
         });
 
         this.chart = new Chart();
+    };
+
+    Dashboard.prototype.findSensor = function (sensorId) {
+        var foundSensor = null;
+
+
+        $.each(this.products, function (index, product) {
+            $.each(product.sensors, function (index, sensor) {
+                if (sensor.id === sensorId) {
+                    foundSensor = sensor;
+                    return false;
+                }
+            });
+
+            if (foundSensor) return false;
+        });
+
+        return foundSensor;
     };
 
     Dashboard.prototype.productIdBySensor = function (sensor) {
@@ -68,38 +101,57 @@
         return foundProduct;
     };
 
-    Dashboard.prototype.selectionChange = function () {
-        this.getNewSamples();
-    };
-
     Dashboard.prototype.getNewSamples = function () {
         var self = this,
             samplesUrl, requestParams;
 
-        samplesUrl = window.location.origin + "/api/samplings/show/" + this.selection.selectedProductId;
+        samplesUrl = window.location.origin + "/api/samplings/show/" + self.selection.selectedProductId;
         requestParams = {
             generic_sensor_id: this.selection.selectedGenericSensorId,
-            start: "2001-01-01",
-            limit: 10
+            timeFilter: self.selection.timeFilter
         };
+
+        if ( ! requestParams.generic_sensor_id) return;
+
         // change second param to have a better filter
         $.getJSON(samplesUrl, requestParams, function (data) {
             self.chart.update( new GraphData(data) );
         });
     };
 
+    Dashboard.prototype.sensorSelectionChange = function () {
+        this.getNewSamples();
+    };
+
+    Dashboard.prototype.timeFilterSelectionChange = function () {
+        this.getNewSamples();
+    };
+
     function Selection () {
         this.selectedSensorId = null;
         this.selectedProductId = null;
         this.selectedGenericSensorId = null;
+
+        this.timeFilter = "hour";
     }
 
     Selection.prototype.selectSensor = function (sensor) {
+        if ( ! (sensor instanceof Object)) {
+            sensor = dashboard.findSensor(sensor);
+            if ( ! sensor) return;
+        }
+
+
         this.selectedSensorId = sensor.id;
         this.selectedGenericSensorId = sensor.generic_sensor_id;
         this.selectedProductId = dashboard.productIdBySensor(sensor).id;
 
-        dashboard.selectionChange();
+        dashboard.sensorSelectionChange();
+    };
+
+    Selection.prototype.selectTimeFilter = function (newTimeFilter) {
+        this.timeFilter = newTimeFilter;
+        dashboard.timeFilterSelectionChange();
     };
 
     function Product (raw) {
@@ -159,7 +211,11 @@
                 right: 40
             },
             axisX: {
-                showGrid: false
+                showGrid: false,
+                offset: 70
+            },
+            axisY: {
+                offset: 70
             }
         };
         this.chart = new Chartist.Line('#chart', null, chart_options);

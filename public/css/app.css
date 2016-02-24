@@ -7294,3 +7294,11 @@ button.close {
 /* line 34, ../../resources/assets/sass/app.scss */
 .ct-label.ct-vertical.ct-start {
   font-size: 0.9em; }
+
+/* line 38, ../../resources/assets/sass/app.scss */
+.center-wrapper {
+  text-align: center; }
+
+/* line 42, ../../resources/assets/sass/app.scss */
+.time-filters {
+  display: inline-block; }
