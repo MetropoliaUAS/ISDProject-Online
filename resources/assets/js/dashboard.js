@@ -163,6 +163,8 @@
         $.each(raw.sensors, function (index, rawSensor) {
             self.sensors.push( new Sensor(rawSensor) );
         });
+
+        self.sensors.reverse();
     }
 
     function Sensor (raw) {
